@@ -5,7 +5,7 @@ public class TVtest {
 		TV dea=new TV(32,54);
 		dea.channelUp();
 		dea.turnOff();
-		dea.displayInfo();
+	
 	}
 
 }
