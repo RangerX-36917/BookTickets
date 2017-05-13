@@ -1,10 +1,13 @@
+
 import java.util.*;
+
+//import Flight.Status;
 
 public class Admin {
     String userName = "";
     String password = "";
     boolean ifSignIn = false;
-
+	enum Status {UNPUBLISHED, AVAILABLE, FULL, TERMINATE};
 
     public static void signUp(ArrayList<Admin> array) {
         System.out.println("please input your username");
@@ -58,7 +61,7 @@ public class Admin {
                     System.out.printf("Welcome back, %s!",a.userName);
                     a.ifSignIn = true;
                     success = true;
-                    Admin.action(a,passengers,flights,orders);//sign in successfully -> admin action
+                    Admin.action(a,admins,passengers, flights, orders);//sign in successfully -> admin action
                 }else success = false;    
             }
         }
@@ -66,12 +69,12 @@ public class Admin {
             System.out.println("Sorry, wrong password or username, please check!");           
     }
 
-    public static void action(Admin administrator,ArrayList<Passenger> passengers,ArrayList<Flight> flights,ArrayList<Order> orders) {
+    public static void action(Admin administrator,ArrayList<Admin> admins, ArrayList<Passenger> passengers,ArrayList<Flight> flights,ArrayList<Order> orders) {
         Scanner in = new Scanner(System.in);
         int opt = 0;
         boolean commandGet = false;
         while (!commandGet) {
-            showAdminMenu();
+            showMenu();
             opt = in.nextInt();
             if (opt > 6) 
                 System.out.println("no such command!");
@@ -82,21 +85,21 @@ public class Admin {
         {
             switch (opt) {
                 case 0: continue;
-                case 1: creatFlight(ArrayList<Flight> flights);
+                case 1: creatFlight(flights);
                         break;
-                case 2: 
+                case 2: updateFlight(flights);
                         break;
-                case 3: 
+                case 3: deleteFlight(flights);
                         break;
-                case 4: 
+                case 4: superQuery(flights, orders);
                         break;
-                case 5: 
+                case 5: userManagement(admins);
                         break;
-                case 6: 
+                case 6: publishFlight(flights);
                         break;
                 default: break;
             }
-            showAdminMenu();
+            showMenu();
             opt = in.nextInt();
         }while (opt != 0);
             
@@ -105,7 +108,7 @@ public class Admin {
 
    }
     
-    public static void showAdminMenu() {
+    public static void showMenu() {
         for (int i = 0; i < 50; i++) System.out.printf("_");
         System.out.printf("\nWelcome to book ticket!\n%s%s%s%s%s%s%s",
                           "0:Exit\n",
@@ -117,10 +120,12 @@ public class Admin {
                           "6:query flight\n");
     }   
 
+
+
     public static void creatFlight(ArrayList<Flight> flights) {
-        Canner in = new Scanner(System.in);
+        Scanner in = new Scanner(System.in);
         System.out.println("Please input FlightID:");
-        String FlightID = in.next();
+        String flightID = in.next();
         System.out.println("Please input start time:");
         String startTime = in.next();
         System.out.println("Please input arrival time:");
@@ -137,8 +142,106 @@ public class Admin {
         int seatCapacity = in.nextInt();
         System.out.println("Please input flight status:");
         String flightStatus = in.next();
-        
-        Flight f = new Flight(FlightID, startTime, arrivalTime, startCity, arrivalCity, departureDate, price, seatCapacity, flights);
+        int seatNum = 0;
+        Flight f = new Flight(flightID, startTime, arrivalTime, startCity, arrivalCity, departureDate, price, seatNum, seatCapacity);
         flights.add(f);
     }
+/*
+//unfinished updateFlight
+    public static void updateFlight(ArrayList<Flight> flights) {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Please input FlightID:");
+        int flightID = in.next();
+
+        for (Flight a : flights) {
+            if (a.getflightID() == flightID) {
+	        	System.out.printf(
+		    	  "\nPlease choose the information you wish to update:\n%s%s%s%s%s%s%s",
+		    	  "0:FlightID\n",
+                  "1:start time\n",
+                  "2:arrival time\n",
+                  "3:start city\n",
+                  "4:arrival city\n",
+                  "5:departure date\n",
+		    	  "6:price\n",
+                  "7:seat capacity\n");
+                int opt = in.nextInt();
+                switch(opt) {
+	    	        case 0: System.out.println("Please input the new FlightID:n");
+	    	                int f = in.nextInt();
+	    	                a.setFlightID(f);
+	    	                break;
+                    case 1: System.out.println("Please input the new start time:");
+                            String f = in.next();
+                            a.setStartTime(f);
+                            break;
+                    case 2: System.out.println("Please input the new arrival time:");
+                            String f = in.next();
+                            a.setArrivalTime(f);
+                            break;
+                    case 3: System.out.println("Please input the new start city:");
+                            String f = in.next();
+                            a.setStartCity(f);
+                            break;
+                    case 4: System.out.println("Please input the new arrival city:");
+                            String f = in.next();
+                            a.setArrivalCity(f);
+                            break;
+                    case 5: System.out.println("Please input the new departure date");
+                            String f = in.next();
+                            a.setDepartureDate(f);
+                            break;
+                    case 6: System.out.println("Please input the new price");
+                            int f = in.nextInt();
+                            a.setPrice(f);
+                            break;  
+                    case 7: System.out.println("Please input the new seat capacity");
+                            int f = in.nextInt();
+                            a.setSeatCapacity(f);
+                            break;                             
+                    default : break;
+                }  
+            }
+        }
+    }
+//unfinished                        
+    public static void deleteFlight(ArrayList<Flight> flights) {
+
+    }
+//unfinished                        
+    public static void superQuery(ArrayList<Flight> flights, ArrayList<Order> orders) {
+
+    }
+//unfinished
+    public static void userManagement(ArrayList<Admin> admins) {
+
+    }
+    */
+    public static void publishFlight(ArrayList<Flight> flights) {
+        if (Flight.unpublishedNum == 0) 
+            System.out.println("There is no unpublished flights!");
+        if (Flight.unpublishedNum != 0) {
+            System.out.println("Unpublished flights:");
+            System.out.println("FlightID");
+            for (Flight a : flights) {
+                if (a.getFlightStatus() == Flight.Status.UNPUBLISHED) 
+                    System.out.println(a.getFlightID());
+            }
+            System.out.println("Please enter the FlightID of the flight you wish to publish");
+            Scanner in = new Scanner(System.in);
+            String id = in.next();
+            boolean success = false;
+            for (Flight a : flights) {
+                if (a.getFlightID().equals(id)) {
+                    a.setFlightStatus(Flight.Status.AVAILABLE);
+                    success = true;
+                }
+                
+            }
+        if (success) 
+            System.out.println("You have successfully published the flight"+id);
+        else System.out.println("Sorry, so such flight or it has already been published!");
+        }
+    }
+                       
 }
