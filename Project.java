@@ -14,26 +14,27 @@ public class Project {
         boolean commandGet = false;
         showMenu();
         while (!commandGet) {
-         //   showMenu();
             opt = in.nextInt();
             if (opt > 4) 
                 System.out.println("no such command!");
             else commandGet = true;
 
         }
+        
         do 
         {
             switch (opt) {
                 case 0: continue;
                 case 1: Admin.signUp(Admins);
                         break;
-//              case 2: Passengers.SignUp(Passengers);
- //                     break;
-                case 3: Admin.signIn(Admins,Passengers,Flights,Orders);
+                case 2: Passenger.signUp(Passengers);
                         break;
-        //      case 4: Passengers.SignIn(Passengers);
-        //              Passengers.action(Passengers, Flights, Orders);
-        //              break;
+                case 3: Admin.signIn(Admins,Passengers,Flights,Orders);
+                   //     Admin.action(Admins, Passengers, Flights, Orders);
+                        break;
+                case 4: Passenger.signIn(Passengers);
+                //        Passenger.action(Passengers, Flights, Orders);
+                        break;
            
                 default: break;
             }
