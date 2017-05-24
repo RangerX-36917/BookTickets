@@ -1,20 +1,23 @@
 import java.util.*;
+import java.util.GregorianCalendar;
+
 public class Order {
 	Passenger passenger = new Passenger(0,"", "","");
 	String seat;
 	Flight flight = new Flight("", "", "", "", "", "", 0, 0, 0);
 	Date creatDate = new Date();
+
 	enum orderStatus {PAID, UNPAID, CANCEL};
 	orderStatus status = orderStatus.UNPAID;
 
 	public Order (Passenger passenger1, String seat, Flight flight1, Date creatDate1)
 	{
-		;
-		seat = seat;
+		this.seat = seat;
 		flight.copy(flight1);
-		creatDate = creatDate;
+		this.creatDate = creatDate;
 		status = orderStatus.UNPAID;
 		passenger.copy(passenger1);
+		status = orderStatus.UNPAID;
 	}
 	public void setPassenger(Passenger passenger1){
 		passenger = passenger1;
@@ -34,14 +37,15 @@ public class Order {
 	public Flight getFlight(){
 		return flight;
 	}
+	
 	public void setDate(Date creatDate){
 		creatDate=creatDate;
 	}
 	public Date getDate(){
 		return creatDate;
 	}
-	public void setStatus(String status){
-		status=status;
+	public void setStatus(orderStatus s){
+		status = s;
 	}
 	public orderStatus getStatus(){
 		return status;

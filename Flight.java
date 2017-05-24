@@ -1,6 +1,6 @@
+import java.text.SimpleDateFormat;
 import java.util.*;
 
-//import sun.print.PSStreamPrinterFactory;
 public class Flight {
 
 	static int unpublishedNum = 0;
@@ -14,10 +14,15 @@ public class Flight {
 	private int currentPassengers;
 	private int seatCapacity;
 	
-	private ArrayList<Passenger> passengers;
+	private ArrayList<Seat> seats = new ArrayList<Seat> ();
+	private ArrayList<Passenger> passengers = new ArrayList<Passenger>();
+	private ArrayList<Order> orders = new ArrayList<Order> ();
 
 	enum Status {UNPUBLISHED, AVAILABLE, FULL, TERMINATE};
 	private Status flightStatus;
+	private void initiateSeat(int n) {
+		
+	}
 	public Flight(String FlightID1, String startTime1, String arrivalTime1, String startCity1,String arrivalCity1, String departureDate1, int price1, int currentPassengers1, int seatCapacity1)
 	{
 		flightID = FlightID1;
@@ -31,6 +36,14 @@ public class Flight {
 		seatCapacity = seatCapacity1; 
 		flightStatus = Status.UNPUBLISHED;
 		unpublishedNum++;
+		//initiateSeat(seatCapacity);
+		for (int i=1; i <= seatCapacity1/6; i++) {
+			for(int j = 1; j < 7; j++){
+			String s = j + "";
+			Seat seat = new Seat((char)(65+i), s);
+			seats.add(seat);
+			}
+		}
 	}				
 	public void copy(Flight f) {
 		flightID = f.getFlightID();
@@ -43,6 +56,21 @@ public class Flight {
 		currentPassengers = f.getCurrentPassengers();
 		seatCapacity = f.getSeatCapacity(); 
 		flightStatus = f.getFlightStatus();
+	}
+	public static void updateFlightStatus(ArrayList<Flight> flights) {
+		SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date();
+		long currentTime = date.getTime();
+		for (Flight f : flights) {
+			if (f.getCurrentPassengers() == f.getSeatCapacity()) 
+				f.setFlightStatus(Status.FULL);
+			try{	
+				String s = f.getStartTime();
+				Date startTime = d.parse(s);
+				if (startTime.getTime() - currentTime <= 7200000) 
+				f.setFlightStatus(Status.TERMINATE);
+			}catch(Exception e){}
+		}
 	}
 	public void setFlightID(String flightID){
 		this.flightID = flightID;
@@ -107,7 +135,24 @@ public class Flight {
 	public void addPassenger(Passenger passenger){
 		passengers.add(passenger);
 	}
-	public ArrayList getPassengers(){
+	public ArrayList<Passenger> getPassengers(){
 		return passengers;
+	}
+	public ArrayList<Order> getOrders() {
+		return orders;
+	}
+	public void showAvalableSeats() {
+		int count = 0;
+		for (Seat s : seats) {
+			count ++;
+			if(!s.getIfBooked()) System.out.print(s.getSeatNum()+" ");
+			if (count % 6 == 0) System.out.println();
+		}
+	}
+	public ArrayList<Seat> getSeats() {
+		return seats;
+	}
+	public void addOrder(Order o) {
+		orders.add(o);
 	}
 }
